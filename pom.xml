@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="windows-1251"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -15,13 +15,13 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <encoding>windows-1251</encoding>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
     <dependencies>
-<!--         Ð’Ð°ÑˆÐ¸ Ð·Ð°Ð²Ð¸ÑÐ¸Ð¼Ð¾ÑÑ‚Ð¸-->
+<!--         Âàøè çàâèñèìîñòè-->
          <!-- https://mvnrepository.com/artifact/junit/junit -->
          <dependency>
              <groupId>junit</groupId>

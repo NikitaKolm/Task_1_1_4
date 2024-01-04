@@ -16,16 +16,13 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
         try (Statement statement = connection.createStatement()) {
-            String sql = "CREATE TABLE users " +
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS users " +
                     "(id INT NOT NULL AUTO_INCREMENT, " +
                     " name VARCHAR(255) NULL, " +
                     " lastName VARCHAR(255) NULL, " +
                     " age INTEGER NULL, " +
-                    " PRIMARY KEY ( id ))";
-            statement.executeUpdate(sql);
+                    " PRIMARY KEY ( id ))");
             System.out.println("Database users has been created");
-        } catch (SQLSyntaxErrorException ignored) {
-
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -33,35 +30,30 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() {
         try (Statement statement = connection.createStatement()) {
-            String sql = "DROP TABLE users ";
-            statement.executeUpdate(sql);
+            statement.executeUpdate("DROP TABLE IF EXISTS users ");
             System.out.println("Database users has been deleted");
-        } catch (SQLSyntaxErrorException ignored) {
-
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format("INSERT INTO users(name, lastName, age) VALUES ('%s', '%s', %d)", name, lastName, age);
-            statement.execute(sql);
-            System.out.printf("User с именем Ц %s добавлен в базу данных\n", name);
-        } catch (SQLSyntaxErrorException ignored) {
-
+        try (PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users" +
+                "(name, lastName, age) VALUES (?, ?, ?)")) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, lastName);
+            preparedStatement.setByte(3, age);
+            preparedStatement.execute();
+            System.out.printf("User named Ц %s added to the database\n", name);
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
     }
 
     public void removeUserById(long id) {
-        try (Statement statement = connection.createStatement()) {
-            String sql = String.format("DELETE FROM users WHERE Id = %d", id);
-            statement.execute(sql);
-            System.out.printf("User с id=%d удален из базы данных\n", id);
-        } catch (SQLSyntaxErrorException ignored) {
-
+        try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE Id = ?")) {
+            preparedStatement.setLong(1, id);
+            System.out.printf("User with id=%d has been removed from the database\n", id);
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -69,8 +61,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public List<User> getAllUsers() {
         try (Statement statement = connection.createStatement()) {
-            String sql = "SELECT * FROM users";
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
             List<User> list = new ArrayList<>();
             while (resultSet.next()) {
                 User user = new User();
@@ -81,8 +72,6 @@ public class UserDaoJDBCImpl implements UserDao {
                 list.add(user);
             }
             return list;
-        } catch (SQLSyntaxErrorException ignored) {
-
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -91,11 +80,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() {
         try (Statement statement = connection.createStatement()) {
-            String sql = "TRUNCATE TABLE users ";
-            statement.executeUpdate(sql);
+            statement.executeUpdate("TRUNCATE TABLE users ");
             System.out.println("Database users has been cleaned");
-        } catch (SQLSyntaxErrorException ignored) {
-
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
         }
