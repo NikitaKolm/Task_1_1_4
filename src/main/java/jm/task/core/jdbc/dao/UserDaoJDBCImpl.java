@@ -17,13 +17,13 @@ public class UserDaoJDBCImpl implements UserDao {
     public void createUsersTable() {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS users " +
-                    "(id INT NOT NULL AUTO_INCREMENT, " +
+                    "(id BIGINT NOT NULL AUTO_INCREMENT, " +
                     " name VARCHAR(255) NULL, " +
                     " lastName VARCHAR(255) NULL, " +
-                    " age INTEGER NULL, " +
+                    " age TINYINT NULL, " +
                     " PRIMARY KEY ( id ))");
             System.out.println("Database users has been created");
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -32,7 +32,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DROP TABLE IF EXISTS users ");
             System.out.println("Database users has been deleted");
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -45,7 +45,7 @@ public class UserDaoJDBCImpl implements UserDao {
             preparedStatement.setByte(3, age);
             preparedStatement.execute();
             System.out.printf("User named – %s added to the database\n", name);
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -54,7 +54,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE Id = ?")) {
             preparedStatement.setLong(1, id);
             System.out.printf("User with id=%d has been removed from the database\n", id);
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -72,7 +72,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 list.add(user);
             }
             return list;
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -82,7 +82,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("TRUNCATE TABLE users ");
             System.out.println("Database users has been cleaned");
-        } catch (SQLException | NullPointerException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
